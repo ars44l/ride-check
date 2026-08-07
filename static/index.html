@@ -4,291 +4,428 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RideCheck</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { margin: 0; min-height: 100%; }
+    html, body { margin: 0; height: 100%; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(160deg, #eef7f0 0%, #f6f8fa 100%);
-      color: #111;
-      padding: 28px 18px 60px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      font-family: 'Space Grotesk', sans-serif;
+      background: #0a0f0c;
+      color: #e6f2ea;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(57,255,138,0.03) 0px, rgba(57,255,138,0.03) 1px, transparent 1px, transparent 3px);
     }
-    .container { width: 100%; max-width: 420px; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
 
-    .brand {
+    /* ---------- Auth / setup / history: centered plain screens ---------- */
+    .plain-wrap {
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      margin-bottom: 26px;
-      text-align: center;
-    }
-    .brand-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 13px;
-      background: #16803c;
-      display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 10px;
-      box-shadow: 0 6px 16px rgba(22,128,60,0.25);
+      padding: 28px 18px 60px;
     }
+    .container { width: 100%; max-width: 400px; }
+
+    .brand { display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; text-align: center; }
+    .brand-mark {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    }
+    .dot {
+      width: 9px; height: 9px; border-radius: 50%; background: #39ff8a;
+      box-shadow: 0 0 8px #39ff8a;
+      animation: blink 1.6s ease-in-out infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     h1 {
-      font-size: 24px;
-      font-weight: 800;
+      font-size: 26px;
+      font-weight: 700;
       margin: 0;
-      letter-spacing: -0.5px;
-      color: #14251a;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #f2fbf5;
     }
     .tagline {
-      font-size: 13px;
-      color: #6b7a70;
-      font-weight: 500;
-      margin-top: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #6f9c81;
+      margin-top: 6px;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
     }
 
     label {
       display: block;
-      font-size: 12px;
-      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.4px;
-      margin: 16px 0 6px;
-      color: #8a9a90;
+      letter-spacing: 1px;
+      margin: 16px 0 7px;
+      color: #5c7f6b;
     }
     select, input, button {
       width: 100%;
-      font-size: 17px;
+      font-size: 16px;
       padding: 13px 14px;
-      border-radius: 11px;
-      border: 1.5px solid #e2e8e4;
+      border-radius: 4px;
+      border: 1px solid #23342b;
       box-sizing: border-box;
-      font-family: inherit;
-      background: white;
+      font-family: 'JetBrains Mono', monospace;
+      background: #0e1512;
+      color: #e6f2ea;
     }
-    select, input { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
-    select:focus, input:focus {
-      outline: none;
-      border-color: #16803c;
-      box-shadow: 0 0 0 3px rgba(22,128,60,0.12);
-    }
+    select, input { transition: border-color 0.15s ease; }
+    select:focus, input:focus { outline: none; border-color: #39ff8a; }
+    input::placeholder { color: #4a6656; }
     button {
-      background: #14251a;
-      color: white;
+      background: #39ff8a;
+      color: #06110a;
       border: none;
       font-weight: 700;
+      font-family: 'Space Grotesk', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
       margin-top: 18px;
       cursor: pointer;
-      transition: transform 0.08s ease, background 0.15s ease, opacity 0.15s ease;
+      transition: transform 0.08s ease, background 0.15s ease;
     }
     button:active { transform: scale(0.97); }
-    button:disabled { background: #c7cad0; cursor: not-allowed; }
+    button:disabled { background: #23342b; color: #5c7f6b; cursor: not-allowed; }
 
     .btn-row { display: flex; gap: 10px; margin-top: 18px; }
     .btn-row button { margin-top: 0; }
-    .btn-take { background: #16803c !important; }
-    .btn-skip { background: white !important; color: #a3231f !important; border: 1.5px solid #f0c9c8 !important; }
+    .btn-take { background: #39ff8a !important; color: #06110a !important; }
+    .btn-skip { background: transparent !important; color: #ff6b6b !important; border: 1px solid #4a2b2b !important; }
 
     .link-btn {
-      background: none; color: #8a9a90; font-size: 13px; font-weight: 600;
-      text-decoration: none; margin-top: 6px; padding: 10px; border: none;
+      background: none; color: #5c7f6b; font-size: 12px; font-weight: 600;
+      font-family: 'JetBrains Mono', monospace; text-transform: none;
+      letter-spacing: 0; text-decoration: none; margin-top: 6px; padding: 10px; border: none;
     }
     .link-btn:active { transform: none; opacity: 0.5; }
 
     .card {
-      background: white;
-      border-radius: 16px;
+      background: #0e1512;
+      border: 1px solid #1c2b21;
+      border-radius: 6px;
       padding: 22px;
-      box-shadow: 0 2px 10px rgba(20,37,26,0.06);
-      border: 1px solid #edf1ee;
     }
 
     #setup-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #14251a;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: #9fd8b4;
       margin-bottom: 16px;
       text-align: center;
+      letter-spacing: 0.3px;
     }
 
     #result {
-      display: none; margin-top: 20px; padding: 24px 20px; border-radius: 16px;
-      text-align: center; animation: pop 0.25s ease;
+      display: none; margin-top: 20px; padding: 24px 20px; border-radius: 6px;
+      text-align: center; animation: pop 0.25s ease; border: 1px solid;
     }
     @keyframes pop { from { transform: scale(0.96); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    #result.take { background: linear-gradient(135deg, #16803c, #229150); }
-    #result.skip { background: #fbeceb; }
-    #verdict { font-size: 27px; font-weight: 800; margin-bottom: 5px; letter-spacing: -0.4px; }
-    #result.take #verdict { color: white; }
-    #result.skip #verdict { color: #a3231f; }
-    #detail-line { font-size: 14px; font-weight: 500; }
-    #result.take #detail-line { color: #dcf3e3; }
-    #result.skip #detail-line { color: #7a4442; }
-    .breakdown {
-      margin-top: 16px; font-size: 13px; text-align: left;
-      border-radius: 11px; padding: 13px 15px;
+    #result.take { background: #0d1f13; border-color: #39ff8a; }
+    #result.skip { background: #1f0d0d; border-color: #ff6b6b; }
+    #verdict {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 26px; font-weight: 700; margin-bottom: 5px; letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
-    #result.take .breakdown { background: rgba(255,255,255,0.14); color: #eafbee; }
-    #result.skip .breakdown { background: rgba(255,255,255,0.6); color: #6b4e4d; }
+    #result.take #verdict { color: #39ff8a; }
+    #result.skip #verdict { color: #ff6b6b; }
+    #detail-line { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500; color: #9fd8b4; }
+    #result.skip #detail-line { color: #d99; }
+    .breakdown {
+      margin-top: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; text-align: left;
+      border-radius: 4px; padding: 13px 15px; background: rgba(255,255,255,0.03);
+    }
     .breakdown div { display: flex; justify-content: space-between; padding: 4px 0; }
-    .breakdown div:not(:last-child) { border-bottom: 1px solid rgba(0,0,0,0.06); }
-    #result.take .breakdown div:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.15); }
+    .breakdown div:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.06); }
 
     .track-question {
-      margin-top: 20px; font-size: 13px; font-weight: 700; text-align: center;
+      margin-top: 20px; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      font-weight: 600; text-align: center; text-transform: uppercase; letter-spacing: 0.5px;
     }
-    #result.take .track-question { color: #eafbee; }
-    #result.skip .track-question { color: #7a4442; }
+    #result.take .track-question { color: #9fd8b4; }
+    #result.skip .track-question { color: #d99; }
 
     #tracked-msg {
-      display: none; margin-top: 12px; text-align: center; font-size: 13px; font-weight: 700;
-      color: #14251a; background: rgba(255,255,255,0.85); border-radius: 10px; padding: 10px;
+      display: none; margin-top: 12px; text-align: center; font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; font-weight: 600; color: #39ff8a; background: rgba(57,255,138,0.08);
+      border-radius: 4px; padding: 10px;
     }
 
     #history-list { margin-top: 4px; }
     .ride-row {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 13px 0; border-bottom: 1px solid #eef1ee; font-size: 14px;
+      padding: 13px 0; border-bottom: 1px solid #1c2b21; font-family: 'JetBrains Mono', monospace; font-size: 13px;
     }
     .ride-row:last-child { border-bottom: none; }
-    .ride-date { color: #8a9a90; font-size: 12px; margin-top: 2px; }
-    .ride-profit { font-weight: 700; color: #16803c; }
+    .ride-date { color: #5c7f6b; font-size: 11px; margin-top: 2px; }
+    .ride-profit { font-weight: 700; color: #39ff8a; }
 
-    .totals-row { display: flex; justify-content: space-between; padding: 9px 0; font-size: 14px; }
-    .totals-row:not(:last-child) { border-bottom: 1px solid #eef1ee; }
-    .totals-row span:first-child { color: #8a9a90; font-weight: 600; }
-    .totals-row span:last-child { font-weight: 800; color: #14251a; }
+    .totals-row { display: flex; justify-content: space-between; padding: 9px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+    .totals-row:not(:last-child) { border-bottom: 1px solid #1c2b21; }
+    .totals-row span:first-child { color: #5c7f6b; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+    .totals-row span:last-child { font-weight: 700; color: #e6f2ea; }
 
-    .car-badge {
-      font-size: 12px; color: #4d6b57; font-weight: 700; margin-bottom: 16px; text-align: center;
-      background: #e6f3ea; padding: 9px 12px; border-radius: 10px;
-    }
     .guest-badge {
-      font-size: 12px; color: #a3231f; font-weight: 700; margin-bottom: 10px; text-align: center;
-      background: #fbeceb; padding: 8px 12px; border-radius: 10px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #ff6b6b; font-weight: 700;
+      margin-bottom: 10px; text-align: center; background: rgba(255,107,107,0.08);
+      padding: 8px 12px; border-radius: 4px; letter-spacing: 0.3px;
     }
 
-    .auth-toggle { display: flex; gap: 8px; margin-bottom: 18px; background: #e9efe9; padding: 4px; border-radius: 12px; }
+    .auth-toggle { display: flex; gap: 4px; margin-bottom: 14px; background: #0e1512; padding: 4px; border-radius: 6px; border: 1px solid #1c2b21; }
     .auth-toggle button {
-      margin-top: 0; background: transparent; color: #6b7a70; font-size: 14px; padding: 10px; border-radius: 9px;
+      margin-top: 0; background: transparent; color: #5c7f6b; font-size: 12px; padding: 10px; border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.5px;
     }
-    .auth-toggle button.active { background: #14251a; color: white; }
-    .error-text { color: #a3231f; font-size: 13px; font-weight: 600; margin-top: 10px; display: none; text-align: center; }
+    .auth-toggle button.active { background: #39ff8a; color: #06110a; }
+    .error-text { color: #ff6b6b; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; margin-top: 10px; display: none; text-align: center; }
 
     .back-link { padding-left: 0 !important; }
-
     .hidden { display: none; }
+
+    /* ---------- Main screen: full-height scroll-snap sections ---------- */
+    #main-screen.active {
+      position: fixed; inset: 0; overflow: hidden;
+    }
+    .scroll-container {
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+    .scroll-section {
+      height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+    }
+
+    .car-readout {
+      text-align: center;
+      max-width: 380px;
+    }
+    .car-readout .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #5c7f6b;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+    }
+    .car-readout .vehicle {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #f2fbf5;
+      margin-bottom: 18px;
+      line-height: 1.2;
+    }
+    .stat-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 8px; }
+    .stat-box {
+      border: 1px solid #1c2b21;
+      background: #0e1512;
+      border-radius: 6px;
+      padding: 14px 18px;
+      min-width: 100px;
+    }
+    .stat-box .num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 22px;
+      font-weight: 700;
+      color: #39ff8a;
+    }
+    .stat-box .unit {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #5c7f6b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 34px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #5c7f6b;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .scroll-cue svg { animation: bob 1.6s ease-in-out infinite; }
+    @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+    .calc-section { justify-content: flex-start; padding-top: 40px; overflow-y: auto; }
+    .calc-inner { width: 100%; max-width: 400px; }
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #5c7f6b;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
   </style>
 </head>
 <body>
 
-<div class="container">
-
-  <div class="brand">
-    <div class="brand-icon">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-      </svg>
-    </div>
-    <h1>RideCheck</h1>
-    <p style="text-align:center; color:#6b7a70; font-size:14px; margin-top:2px; margin-bottom:22px; max-width:280px; margin-left:auto; margin-right:auto; line-height:1.4;">Profit tracking built for DoorDash, UberEats, and other delivery drivers</p>
-  </div>
-
   <!-- AUTH SCREEN -->
-  <div id="auth-screen" class="hidden">
-    <div class="auth-toggle">
-      <button id="tab-login" class="active" onclick="switchAuthTab('login')">Log In</button>
-      <button id="tab-register" onclick="switchAuthTab('register')">Sign Up</button>
-    </div>
+  <div id="auth-screen" class="plain-wrap hidden">
+    <div class="container">
+      <div class="brand">
+        <div class="brand-mark">
+          <div class="dot"></div>
+          <h1>RideCheck</h1>
+        </div>
+        <div class="tagline">profit tracking for doordash &amp; ubereats drivers</div>
+      </div>
 
-    <div class="card">
-      <label style="margin-top:0;">Username or Email</label>
-      <input id="auth-identifier" type="text" placeholder="Enter username or email">
+      <div class="auth-toggle">
+        <button id="tab-login" class="active" onclick="switchAuthTab('login')">Log In</button>
+        <button id="tab-register" onclick="switchAuthTab('register')">Sign Up</button>
+      </div>
 
-      <label>Password</label>
-      <input id="auth-password" type="password" placeholder="••••••••">
+      <div class="card">
+        <label style="margin-top:0;">Username or Email</label>
+        <input id="auth-identifier" type="text" placeholder="Enter username or email">
 
-      <button id="auth-submit-btn" onclick="submitAuth()">Log In</button>
-      <div class="error-text" id="auth-error"></div>
-    </div>
+        <label>Password</label>
+        <input id="auth-password" type="password" placeholder="••••••••">
 
-    <div style="text-align:center;">
-      <button class="link-btn" onclick="continueAsGuest()">Continue as Guest →</button>
+        <button id="auth-submit-btn" onclick="submitAuth()">Log In</button>
+        <div class="error-text" id="auth-error"></div>
+      </div>
+
+      <div style="text-align:center;">
+        <button class="link-btn" onclick="continueAsGuest()">continue as guest &rarr;</button>
+      </div>
     </div>
   </div>
 
   <!-- SETUP SCREEN -->
-  <div id="setup-screen" class="hidden">
-    <div id="setup-title"></div>
-    <div class="card">
-      <label style="margin-top:0;">Year</label>
-      <select id="year"></select>
+  <div id="setup-screen" class="plain-wrap hidden">
+    <div class="container">
+      <div class="brand">
+        <div class="brand-mark"><div class="dot"></div><h1>RideCheck</h1></div>
+      </div>
+      <div id="setup-title"></div>
+      <div class="card">
+        <label style="margin-top:0;">Year</label>
+        <select id="year"></select>
 
-      <label>Make</label>
-      <select id="make"></select>
+        <label>Make</label>
+        <select id="make"></select>
 
-      <label>Model</label>
-      <select id="model"></select>
+        <label>Model</label>
+        <select id="model"></select>
 
-      <label>State (2-letter code)</label>
-      <input id="state" value="NY" maxlength="2" style="text-transform:uppercase;">
+        <label>State (2-letter code)</label>
+        <input id="state" value="NY" maxlength="2" style="text-transform:uppercase;">
 
-      <label>Target profit per hour ($)</label>
-      <input id="target-rate" type="number" value="30">
+        <label>Target profit per hour ($)</label>
+        <input id="target-rate" type="number" value="30">
 
-      <button onclick="saveCar()">Save & Continue</button>
+        <button onclick="saveCar()">Save &amp; Continue</button>
+      </div>
     </div>
   </div>
 
   <!-- MAIN SCREEN -->
   <div id="main-screen" class="hidden">
-    <div id="guest-notice" class="guest-badge hidden">Guest mode — your data will be lost when you close this tab</div>
-    <div id="car-info" class="car-badge"></div>
+    <div class="scroll-container">
 
-    <div class="card">
-      <label style="margin-top:0;">Fare ($)</label>
-      <input id="fare" type="number" inputmode="decimal" placeholder="e.g. 18.50">
+      <!-- Section 1: car status -->
+      <section class="scroll-section">
+        <div id="guest-notice" class="guest-badge hidden">guest mode — data clears when you close this tab</div>
+        <div class="car-readout">
+          <div class="label">vehicle on file</div>
+          <div class="vehicle" id="car-vehicle-line"></div>
+          <div class="stat-row">
+            <div class="stat-box">
+              <div class="num" id="car-mpg-num">--</div>
+              <div class="unit">mpg</div>
+            </div>
+            <div class="stat-box">
+              <div class="num" id="car-target-num">--</div>
+              <div class="unit">target $/hr</div>
+            </div>
+          </div>
+        </div>
+        <div class="scroll-cue" onclick="scrollToCalc()">
+          scroll to check a ride
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39ff8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+        </div>
+      </section>
 
-      <label>Miles</label>
-      <input id="miles" type="number" inputmode="decimal" placeholder="e.g. 12">
+      <!-- Section 2: calculator -->
+      <section class="scroll-section calc-section" id="calc-section">
+        <div class="calc-inner">
+          <div class="section-label">check a ride</div>
 
-      <label>Duration (minutes)</label>
-      <input id="duration" type="number" inputmode="decimal" placeholder="e.g. 25">
+          <div class="card">
+            <label style="margin-top:0;">Fare ($)</label>
+            <input id="fare" type="number" inputmode="decimal" placeholder="e.g. 18.50" autofocus onkeydown="if(event.key==='Enter'){event.preventDefault(); document.getElementById('miles').focus();}">
 
-      <button onclick="checkRide()">Check Ride</button>
-    </div>
+            <label>Miles</label>
+            <input id="miles" type="number" inputmode="decimal" placeholder="e.g. 12" onkeydown="if(event.key==='Enter'){event.preventDefault(); document.getElementById('duration').focus();}">
 
-    <div id="result">
-      <div id="verdict"></div>
-      <div id="detail-line"></div>
-      <div class="breakdown" id="breakdown"></div>
+            <label>Duration (minutes)</label>
+            <input id="duration" type="number" inputmode="decimal" placeholder="e.g. 25" onkeydown="if(event.key==='Enter'){event.preventDefault(); checkRide();}">
 
-      <div class="track-question">Did you take this ride?</div>
-      <div class="btn-row">
-        <button class="btn-take" onclick="logRide(true)">Took it</button>
-        <button class="btn-skip" onclick="logRide(false)">Skipped it</button>
-      </div>
-      <div id="tracked-msg"></div>
-    </div>
+            <button onclick="checkRide()">Check Ride</button>
+          </div>
 
-    <div style="text-align:center; margin-top:10px;">
-      <button class="link-btn" onclick="showHistory()">View History →</button><br>
-      <button class="link-btn" onclick="showSetup()">Edit Car / Settings</button><br>
-      <button class="link-btn" id="logout-btn" onclick="logout()">Log Out</button>
+          <div id="result">
+            <div id="verdict"></div>
+            <div id="detail-line"></div>
+            <div class="breakdown" id="breakdown"></div>
+
+            <div class="track-question">did you take this ride?</div>
+            <div class="btn-row">
+              <button class="btn-take" onclick="logRide(true)">Took it</button>
+              <button class="btn-skip" onclick="logRide(false)">Skipped it</button>
+            </div>
+            <div id="tracked-msg"></div>
+          </div>
+
+          <div style="text-align:center; margin-top:14px;">
+            <button class="link-btn" onclick="showHistory()">view history &rarr;</button><br>
+            <button class="link-btn" onclick="showSetup()">edit car / settings</button><br>
+            <button class="link-btn" id="logout-btn" onclick="logout()">log out</button>
+          </div>
+        </div>
+      </section>
+
     </div>
   </div>
 
   <!-- HISTORY SCREEN -->
-  <div id="history-screen" class="hidden">
-    <button class="link-btn back-link" onclick="showMain()">← Back</button>
-    <div class="card" id="totals" style="margin-top:12px;"></div>
-    <div class="card" id="history-list" style="margin-top:14px;"></div>
+  <div id="history-screen" class="plain-wrap hidden">
+    <div class="container">
+      <button class="link-btn back-link" onclick="showMain()">&larr; back</button>
+      <div class="card" id="totals" style="margin-top:12px;"></div>
+      <div class="card" id="history-list" style="margin-top:14px;"></div>
+    </div>
   </div>
-
-</div>
 
   <script>
     const API = window.location.origin;
@@ -298,7 +435,9 @@
 
     function show(id) {
       ["auth-screen", "setup-screen", "main-screen", "history-screen"].forEach(function(s) {
-        document.getElementById(s).classList.toggle("hidden", s !== id);
+        const el = document.getElementById(s);
+        el.classList.toggle("hidden", s !== id);
+        if (s === "main-screen") el.classList.toggle("active", s === id);
       });
     }
 
@@ -349,19 +488,28 @@
       }
     }
 
+    function setCarReadout(year, make, model, mpg, targetRate) {
+      document.getElementById("car-vehicle-line").innerText = year + " " + make + " " + model;
+      document.getElementById("car-mpg-num").innerText = mpg;
+      document.getElementById("car-target-num").innerText = targetRate;
+    }
+
+    function scrollToCalc() {
+      document.getElementById("calc-section").scrollIntoView({ behavior: "smooth" });
+    }
+
     function continueAsGuest() {
       isGuest = true;
       document.getElementById("guest-notice").classList.remove("hidden");
-      document.getElementById("logout-btn").innerText = "Exit Guest Mode";
+      document.getElementById("logout-btn").innerText = "exit guest mode";
 
       const guestCar = sessionStorage.getItem("guest_car");
       if (guestCar) {
         const car = JSON.parse(guestCar);
-        document.getElementById("car-info").innerText =
-          car.year + " " + car.make + " " + car.model + " · " + car.mpg + " MPG · Target $" + car.target_hourly_rate + "/hr";
+        setCarReadout(car.year, car.make, car.model, car.mpg, car.target_hourly_rate);
         show("main-screen");
       } else {
-        document.getElementById("setup-title").innerText = "Set up your car and target hourly profit to get started";
+        document.getElementById("setup-title").innerText = "set up your car and target hourly profit to get started";
         loadYears();
         show("setup-screen");
       }
@@ -372,7 +520,7 @@
         sessionStorage.clear();
         isGuest = false;
         document.getElementById("guest-notice").classList.add("hidden");
-        document.getElementById("logout-btn").innerText = "Log Out";
+        document.getElementById("logout-btn").innerText = "log out";
       } else {
         await fetch(API + "/api/logout", { method: "POST", credentials: "include" });
       }
@@ -383,11 +531,10 @@
       const res = await fetch(API + "/api/settings", { credentials: "include" });
       const data = await res.json();
       if (data.configured) {
-        document.getElementById("car-info").innerText =
-          data.year + " " + data.make + " " + data.model + " · " + data.mpg + " MPG · Target $" + data.target_hourly_rate + "/hr";
+        setCarReadout(data.year, data.make, data.model, data.mpg, data.target_hourly_rate);
         show("main-screen");
       } else {
-        document.getElementById("setup-title").innerText = "Set up your car and target hourly profit to get started";
+        document.getElementById("setup-title").innerText = "set up your car and target hourly profit to get started";
         await loadYears();
         show("setup-screen");
       }
@@ -452,8 +599,7 @@
 
         const car = { year: year, make: make, model: model, mpg: mpgData.mpg, target_hourly_rate: target_hourly_rate, state_code: state_code };
         sessionStorage.setItem("guest_car", JSON.stringify(car));
-        document.getElementById("car-info").innerText =
-          year + " " + make + " " + model + " · " + mpgData.mpg + " MPG · Target $" + target_hourly_rate + "/hr";
+        setCarReadout(year, make, model, mpgData.mpg, target_hourly_rate);
         show("main-screen");
         return;
       }
@@ -467,8 +613,7 @@
       const data = await res.json();
       if (data.error) { alert(data.error); return; }
 
-      document.getElementById("car-info").innerText =
-        data.year + " " + data.make + " " + data.model + " · " + data.mpg + " MPG · Target $" + data.target_hourly_rate + "/hr";
+      setCarReadout(data.year, data.make, data.model, data.mpg, data.target_hourly_rate);
       show("main-screen");
     }
 
@@ -519,15 +664,15 @@
 
       document.getElementById("verdict").innerText = data.worth_it ? "Take it" : "Skip it";
       const diffText = data.worth_it
-        ? "$" + Math.abs(data.difference) + "/hr above your target"
-        : "$" + Math.abs(data.difference) + "/hr below your target";
+        ? "$" + Math.abs(data.difference) + "/hr above target"
+        : "$" + Math.abs(data.difference) + "/hr below target";
       document.getElementById("detail-line").innerText = "$" + data.profit_per_hour + "/hr — " + diffText;
 
       document.getElementById("breakdown").innerHTML =
-        "<div><span>Profit</span><span>$" + data.profit + "</span></div>" +
-        "<div><span>Gas cost</span><span>$" + data.gas_cost + "</span></div>" +
-        "<div><span>Wear & tear</span><span>$" + data.wear_cost + "</span></div>" +
-        "<div><span>Gas price used</span><span>$" + data.gas_price_used + "/gal</span></div>";
+        "<div><span>profit</span><span>$" + data.profit + "</span></div>" +
+        "<div><span>gas cost</span><span>$" + data.gas_cost + "</span></div>" +
+        "<div><span>wear & tear</span><span>$" + data.wear_cost + "</span></div>" +
+        "<div><span>gas price used</span><span>$" + data.gas_price_used + "/gal</span></div>";
 
       document.getElementById("tracked-msg").style.display = "none";
       document.querySelector(".track-question").style.display = "block";
@@ -553,9 +698,9 @@
             body: JSON.stringify(lastCheckedRide)
           });
         }
-        msg.innerText = "Logged — you took this ride ✓";
+        msg.innerText = "logged — you took this ride";
       } else {
-        msg.innerText = "Got it — not logged, since you skipped it.";
+        msg.innerText = "got it — not logged, since you skipped it";
       }
       msg.style.display = "block";
     }
@@ -581,19 +726,19 @@
       }
 
       document.getElementById("totals").innerHTML =
-        "<div class=\"totals-row\"><span>Today</span><span>$" + totals.today + "</span></div>" +
-        "<div class=\"totals-row\"><span>This week</span><span>$" + totals.this_week + "</span></div>" +
-        "<div class=\"totals-row\"><span>All time</span><span>$" + totals.all_time + "</span></div>";
+        "<div class=\"totals-row\"><span>today</span><span>$" + totals.today + "</span></div>" +
+        "<div class=\"totals-row\"><span>this week</span><span>$" + totals.this_week + "</span></div>" +
+        "<div class=\"totals-row\"><span>all time</span><span>$" + totals.all_time + "</span></div>";
 
       if (rides.length === 0) {
         document.getElementById("history-list").innerHTML =
-          "<div style=\"color:#8a9a90; font-size:14px; text-align:center; padding:10px 0;\">No rides logged yet.</div>";
+          "<div style=\"color:#5c7f6b; font-family:'JetBrains Mono',monospace; font-size:13px; text-align:center; padding:10px 0;\">no rides logged yet</div>";
       } else {
         document.getElementById("history-list").innerHTML = rides.map(function(r) {
           return "<div class=\"ride-row\">" +
             "<div><div>" + r.miles + " mi · " + r.duration_minutes + " min</div>" +
             "<div class=\"ride-date\">" + r.date + "</div></div>" +
-            "<div class=\"ride-profit\">$" + r.profit + " <span style=\"color:#8a9a90; font-weight:500;\">($" + r.profit_per_hour + "/hr)</span></div>" +
+            "<div class=\"ride-profit\">$" + r.profit + " <span style=\"color:#5c7f6b; font-weight:500;\">($" + r.profit_per_hour + "/hr)</span></div>" +
             "</div>";
         }).join("");
       }
@@ -605,7 +750,7 @@
     function showMain() { show("main-screen"); }
 
     async function showSetup() {
-      document.getElementById("setup-title").innerText = "Edit your car settings and desired profit before continuing";
+      document.getElementById("setup-title").innerText = "edit your car settings and desired profit before continuing";
 
       if (isGuest) {
         const guestCar = sessionStorage.getItem("guest_car");
