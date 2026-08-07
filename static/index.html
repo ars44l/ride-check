@@ -18,7 +18,6 @@
     }
     .mono { font-family: 'JetBrains Mono', monospace; }
 
-    /* ---------- Auth / setup / history: centered plain screens ---------- */
     .plain-wrap {
       min-height: 100vh;
       display: flex;
@@ -190,7 +189,6 @@
     .back-link { padding-left: 0 !important; }
     .hidden { display: none; }
 
-    /* ---------- Main screen: full-height scroll-snap sections ---------- */
     #main-screen.active {
       position: fixed; inset: 0; overflow: hidden;
     }
@@ -214,6 +212,7 @@
     .car-readout {
       text-align: center;
       max-width: 380px;
+      will-change: transform, opacity;
     }
     .car-readout .label {
       font-family: 'JetBrains Mono', monospace;
@@ -353,7 +352,6 @@
   <div id="main-screen" class="hidden">
     <div class="scroll-container">
 
-      <!-- Section 1: car status -->
       <section class="scroll-section">
         <div id="guest-notice" class="guest-badge hidden">guest mode — data clears when you close this tab</div>
         <div class="car-readout">
@@ -361,11 +359,11 @@
           <div class="vehicle" id="car-vehicle-line"></div>
           <div class="stat-row">
             <div class="stat-box">
-              <div class="num" id="car-mpg-num">--</div>
+              <div class="num" id="car-mpg-num">0</div>
               <div class="unit">mpg</div>
             </div>
             <div class="stat-box">
-              <div class="num" id="car-target-num">--</div>
+              <div class="num" id="car-target-num">$0</div>
               <div class="unit">target $/hr</div>
             </div>
           </div>
@@ -376,7 +374,6 @@
         </div>
       </section>
 
-      <!-- Section 2: calculator -->
       <section class="scroll-section calc-section" id="calc-section">
         <div class="calc-inner">
           <div class="section-label">check a ride</div>
@@ -488,10 +485,26 @@
       }
     }
 
+    function animateNumber(el, target, prefix) {
+      prefix = prefix || "";
+      let startTime = null;
+      const duration = 900;
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        const progress = Math.min((ts - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const val = target * eased;
+        el.innerText = prefix + Math.round(val);
+        if (progress < 1) requestAnimationFrame(step);
+        else el.innerText = prefix + target;
+      }
+      requestAnimationFrame(step);
+    }
+
     function setCarReadout(year, make, model, mpg, targetRate) {
       document.getElementById("car-vehicle-line").innerText = year + " " + make + " " + model;
-      document.getElementById("car-mpg-num").innerText = mpg;
-      document.getElementById("car-target-num").innerText = targetRate;
+      animateNumber(document.getElementById("car-mpg-num"), mpg);
+      animateNumber(document.getElementById("car-target-num"), targetRate, "$");
     }
 
     function scrollToCalc() {
@@ -776,6 +789,23 @@
         document.getElementById("target-rate").value = settings.target_hourly_rate;
       }
       show("setup-screen");
+    }
+
+    const scrollContainer = document.querySelector(".scroll-container");
+    if (scrollContainer) {
+      scrollContainer.addEventListener("scroll", function() {
+        const vh = window.innerHeight;
+        const progress = Math.min(scrollContainer.scrollTop / vh, 1);
+        const readout = document.querySelector(".car-readout");
+        const cue = document.querySelector(".scroll-cue");
+        if (readout) {
+          readout.style.transform = "scale(" + (1 - progress * 0.15) + ") translateY(" + (progress * -30) + "px)";
+          readout.style.opacity = 1 - progress * 0.9;
+        }
+        if (cue) {
+          cue.style.opacity = Math.max(1 - progress * 4, 0);
+        }
+      });
     }
 
     init();
