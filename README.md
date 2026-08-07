@@ -1,16 +1,16 @@
-# Ride Check
+# RideCheck
 
-A full-stack rideshare profitability calculator that helps drivers decide whether a ride is worth accepting before they take it, accounting for gas and vehicle wear-and-tear costs, not just the fare.
+A profit-tracking tool for DoorDash, Uber Eats, and rideshare drivers that estimates real take-home profit per ride or delivery before you accept it, accounting for gas and vehicle wear-and-tear costs, not just the fare.
 
-Built for a real driver to use in the field, comparing live profit-per-hour against a personal target rate to give an instant take-it/skip-it recommendation.
+Live at: https://uber-ridecheck.onrender.com/
 
 ## How it works
 
-Instead of just showing the fare, Ride Check estimates the driver's actual take-home profit per ride:
+Instead of just showing the fare, RideCheck estimates the driver's actual take-home profit:
 
 Profit = Fare - Gas Cost - Wear-and-Tear Cost
 
-Gas cost is calculated using the vehicle's real EPA-rated MPG (looked up automatically from fueleconomy.gov based on year, make, and model) and live regional gas prices pulled from the EIA (U.S. Energy Information Administration) API. Wear-and-tear uses the IRS standard mileage rate. The resulting profit-per-hour is compared against a driver-set target rate to give a clear take-it or skip-it call.
+Gas cost is calculated using the vehicle's real EPA-rated MPG (looked up automatically from fueleconomy.gov based on year, make, and model) and live regional gas prices pulled from the EIA (U.S. Energy Information Administration) API. Wear-and-tear uses the IRS standard mileage rate. The resulting profit-per-hour is compared against a driver-set target rate to give a clear take-it or skip-it call, fast enough to use in the few seconds before a ride or delivery offer expires.
 
 Account mode saves persistent car settings and ride history to a database, accessible from any device. Guest mode requires no login; car settings and ride history live only in the browser's session storage and clear automatically when the tab closes.
 
@@ -19,8 +19,9 @@ Account mode saves persistent car settings and ride history to a database, acces
 Backend: Python, Flask, Flask-SQLAlchemy, Flask-Login
 APIs: fueleconomy.gov for vehicle MPG lookup, EIA for live gas prices
 Auth: Session-based login with hashed passwords via Werkzeug
-Frontend: Vanilla HTML, CSS, and JavaScript, mobile-first design
-Database: SQLite locally, PostgreSQL in production
+Frontend: Vanilla HTML, CSS, and JavaScript, mobile-first, dark terminal-style UI with scroll-snap sections and animated data readouts
+Database: PostgreSQL in production, SQLite for local development
+Deployment: Render
 
 ## Running locally
 
@@ -50,6 +51,6 @@ static/index.html - Frontend: auth screens, car setup, ride check, and history
 
 ## Possible next steps
 
-Deploy to a live URL (Render config already in place: requirements.txt, Procfile, PostgreSQL support)
-Track and surface real profit improvement over time once used by an actual driver
+Track and surface real profit improvement over time from actual driver use
 Add Google OAuth as an alternative login method
+OCR-based ride offer capture to auto-fill fare, distance, and duration from a screenshot
